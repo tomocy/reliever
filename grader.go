@@ -22,7 +22,7 @@ func (g csvGrader) grade() (grades, error) {
 	courseNames := make([]string, 0)
 	scanner := csv.NewReader(g.reader)
 	for {
-		unit, err := scanner.Read()
+		grade, err := scanner.Read()
 		if err != nil {
 			if err == io.EOF {
 				break
@@ -31,7 +31,8 @@ func (g csvGrader) grade() (grades, error) {
 			return nil, err
 		}
 
-		courseNames = append(courseNames, unit[6])
+		// grade[6] is the name of course
+		courseNames = append(courseNames, grade[6])
 	}
 
 	return grade(courseNames), nil
