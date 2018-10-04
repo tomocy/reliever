@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	unitsList, err := os.Open("units.txt")
+	unitsList, err := os.Open("grades.txt")
 	if err != nil {
 		log.Println(err)
 		return
