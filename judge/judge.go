@@ -1,6 +1,10 @@
 package judge
 
-import "github.com/tomocy/reliever/grader"
+import (
+	"log"
+
+	"github.com/tomocy/reliever/grader"
+)
 
 type Judge interface {
 	Judge() Judgement
@@ -11,34 +15,54 @@ type judgeOfLetters struct {
 }
 
 func NewJudgeOfLetters(grades grader.Grades) Judge {
-	judge := &judgeOfLetters{}
-	judge.grades = judge.modifyGradesIfMultipleCourse(grades)
+	newGrades := make(grader.Grades)
+	for k, v := range grades {
+		newGrades[k] = v
+	}
+	judge := &judgeOfLetters{
+		grades: newGrades,
+	}
+	judge.modifyGrades()
 
 	return judge
 }
 
-func (j judgeOfLetters) modifyGradesIfMultipleCourse(grades grader.Grades) grader.Grades {
+func (j *judgeOfLetters) modifyGrades() {
 	newGrades := make(grader.Grades)
-	for course, classes := range grades {
+	for course, classes := range j.grades {
 		switch course {
-		case "先端教養科目":
-			newGrades["先端教養科目 + 国際教養１"] = append(classes, grades["国際教養１"]...)
-			delete(grades, "国際教養１")
-		case "国際教養１":
-			newGrades["先端教養科目 + 国際教養１"] = append(grades["先端教養科目"], classes...)
-			delete(grades, "先端教養科目")
-		case "大学英語":
-			newGrades["大学英語 + 実践英語・専門英語"] = append(classes, grades["実践英語・専門英語"]...)
-			delete(grades, "実践英語・専門英語")
-		case "実践英語・専門英語":
-			newGrades["大学英語 + 実践英語・専門英語"] = append(grades["大学英語"], classes...)
-			delete(grades, "大学英語")
+		case "先端教養科目", "国際教養１":
+			newGrades["先端教養科目 + 国際教養１"] = append(j.grades["先端教養科目"], j.grades["国際教養１"]...)
+			delete(j.grades, "先端教養科目")
+			delete(j.grades, "国際教養１")
+		case "大学英語", "実践英語・専門英語":
+			newGrades["大学英語 + 実践英語・専門英語"] = append(j.grades["大学英語"], j.grades["実践英語・専門英語"]...)
+			delete(j.grades, "大学英語")
+			delete(j.grades, "実践英語・専門英語")
+		case "ドイツ語", "フランス語", "ロシア語", "中国語", "朝鮮語", "スペイン語", "イタリア語", "日本語":
+			newGrades["第２外国語"] = append(j.grades["ドイツ語"], j.grades["フランス語"]...)
+			newGrades["第２外国語"] = append(newGrades["第２外国語"], append(j.grades["ロシア語"], j.grades["中国語"]...)...)
+			newGrades["第２外国語"] = append(newGrades["第２外国語"], append(j.grades["朝鮮語"], j.grades["スペイン語"]...)...)
+			newGrades["第２外国語"] = append(newGrades["第２外国語"], append(j.grades["イタリア語"], j.grades["日本語"]...)...)
+			delete(j.grades, "ドイツ語")
+			delete(j.grades, "フランス語")
+			delete(j.grades, "ロシア語")
+			delete(j.grades, "中国語")
+			delete(j.grades, "朝鮮語")
+			delete(j.grades, "スペイン語")
+			delete(j.grades, "イタリア語")
+			delete(j.grades, "日本語")
+		case "第１外国語", "第２外国語", "第３外国語":
+			newGrades["選択外国語"] = append(j.grades["第１外国語"], append(j.grades["第２外国語"], j.grades["第３外国語"]...)...)
+			delete(j.grades, "第１外国語")
+			delete(j.grades, "第２外国語")
+			delete(j.grades, "第３外国語")
 		default:
 			newGrades[course] = classes
 		}
 	}
 
-	return newGrades
+	j.grades = newGrades
 }
 
 var criteriaOfLetters = map[string]int{
@@ -49,6 +73,7 @@ var criteriaOfLetters = map[string]int{
 	"国際教養２":            8,
 	"大学英語 + 実践英語・専門英語": 8,
 	"第２外国語":            4,
+	"選択外国語":            4,
 	"情報処理教育科目":         2,
 	"健康・スポーツ教育科目":      2,
 	"専門基礎教育科目":         4,
@@ -59,6 +84,7 @@ func (j judgeOfLetters) Judge() Judgement {
 	for course, classes := range j.grades {
 		criterion, ok := criteriaOfLetters[course]
 		if !ok {
+			log.Println("unknown course: ", course)
 			continue
 		}
 		credits := sumCredits(classes...)
