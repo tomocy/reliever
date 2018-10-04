@@ -1,12 +1,12 @@
 package grader
 
-type course struct {
-	kind    string
-	name    string
-	credits int
+type Course struct {
+	Kind    string
+	Name    string
+	Credits int
 }
 
-var courses = map[string]course{
+var courses = map[string]Course{
 	"日本の歴史": {"基礎教養1", "日本の歴史", 2}, "東洋の歴史": {"基礎教養1", "東洋の歴史", 2}, "西洋の歴史": {"基礎教養1", "西洋の歴史", 2},
 	"日本の文学": {"基礎教養1", "日本の文学", 2}, "東洋の文学": {"基礎教養1", "東洋の文学", 2}, "西洋の文学": {"基礎教養1", "西洋の文学", 2},
 	"教養としての日本語": {"基礎教養1", "教養としての日本語", 2}, "東洋の芸術": {"基礎教養1", "東洋の芸術", 2}, "西洋の芸術": {"基礎教養1", "西洋の芸術", 2},

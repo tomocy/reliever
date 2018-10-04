@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-type Grades map[string][]course
+type Grades map[string][]Course
 
 func (g Grades) String() string {
 	b := make([]byte, 0, 10)
@@ -22,19 +22,19 @@ func hello() string {
 	return "\nYour grade ----------\n\n"
 }
 
-func sumCredits(courses ...course) int {
+func sumCredits(courses ...Course) int {
 	var credits int
 	for _, course := range courses {
-		credits += course.credits
+		credits += course.Credits
 	}
 
 	return credits
 }
 
-func joinCourseNames(courses []course, separator string) string {
+func joinCourseNames(courses []Course, separator string) string {
 	courseNames := make([]string, len(courses))
 	for i, course := range courses {
-		courseNames[i] = course.name
+		courseNames[i] = course.Name
 	}
 
 	return strings.Join(courseNames, separator)

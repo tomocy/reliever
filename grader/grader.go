@@ -46,7 +46,7 @@ func grade(courseNames []string) Grades {
 			log.Println("unknown course name: ", courseName)
 			continue
 		}
-		grades[course.kind] = append(grades[course.kind], course)
+		grades[course.Kind] = append(grades[course.Kind], course)
 	}
 
 	return grades

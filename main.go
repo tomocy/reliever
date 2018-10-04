@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/tomocy/reliever/grader"
+	"github.com/tomocy/reliever/judge"
 )
 
 func main() {
@@ -22,6 +23,8 @@ func main() {
 		log.Println(err)
 		return
 	}
+	judge := judge.NewJudgeOfLetters(grades)
+	judgement := judge.Judge()
 
-	fmt.Println(grades)
+	fmt.Println(judgement)
 }
