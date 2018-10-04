@@ -4,18 +4,20 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	"github.com/tomocy/reliever/grader"
 )
 
 func main() {
-	unitsList, err := os.Open("grades.txt")
+	gradesFile, err := os.Open("grades.txt")
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	defer unitsList.Close()
+	defer gradesFile.Close()
 
-	grader := newCSVGrader(unitsList)
-	grades, err := grader.grade()
+	grader := grader.NewCSVGrader(gradesFile)
+	grades, err := grader.Grade()
 	if err != nil {
 		log.Println(err)
 		return

@@ -1,4 +1,4 @@
-package main
+package grader
 
 type course struct {
 	kind    string

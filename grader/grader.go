@@ -1,4 +1,4 @@
-package main
+package grader
 
 import (
 	"encoding/csv"
@@ -6,19 +6,19 @@ import (
 	"log"
 )
 
-type grader interface {
-	grade() (grades, error)
+type Grader interface {
+	Grade() (grades, error)
 }
 
 type csvGrader struct {
 	reader io.Reader
 }
 
-func newCSVGrader(reader io.Reader) grader {
+func NewCSVGrader(reader io.Reader) Grader {
 	return &csvGrader{reader: reader}
 }
 
-func (g csvGrader) grade() (grades, error) {
+func (g csvGrader) Grade() (grades, error) {
 	courseNames := make([]string, 0)
 	scanner := csv.NewReader(g.reader)
 	for {
