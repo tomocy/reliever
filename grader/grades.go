@@ -5,9 +5,9 @@ import (
 	"strings"
 )
 
-type grades map[string][]course
+type Grades map[string][]course
 
-func (g grades) String() string {
+func (g Grades) String() string {
 	b := make([]byte, 0, 10)
 	b = append(b, hello()...)
 	for kind, courses := range g {

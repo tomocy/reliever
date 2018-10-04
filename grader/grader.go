@@ -7,7 +7,7 @@ import (
 )
 
 type Grader interface {
-	Grade() (grades, error)
+	Grade() (Grades, error)
 }
 
 type csvGrader struct {
@@ -18,7 +18,7 @@ func NewCSVGrader(reader io.Reader) Grader {
 	return &csvGrader{reader: reader}
 }
 
-func (g csvGrader) Grade() (grades, error) {
+func (g csvGrader) Grade() (Grades, error) {
 	courseNames := make([]string, 0)
 	scanner := csv.NewReader(g.reader)
 	for {
@@ -38,8 +38,8 @@ func (g csvGrader) Grade() (grades, error) {
 	return grade(courseNames), nil
 }
 
-func grade(courseNames []string) grades {
-	grades := make(grades)
+func grade(courseNames []string) Grades {
+	grades := make(Grades)
 	for _, courseName := range courseNames {
 		course, ok := courses[courseName]
 		if !ok {
