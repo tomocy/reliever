@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	gradesFile, err := os.Open("grades.txt")
+	gradesFile, err := os.Open("grades.csv")
 	if err != nil {
 		log.Println(err)
 		return
